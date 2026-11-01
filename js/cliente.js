@@ -44,7 +44,6 @@ class ClientPortalController {
 
   init() {
     this.preloadClientData();
-    this.populateBarbershops();
     this.setupNavigation();
     this.renderCalendar();
     this.renderTimeSlots();
@@ -76,25 +75,6 @@ class ClientPortalController {
         <span class="data-pill">📞 Tel.: <strong>${u.phone}</strong></span>
       `;
     }
-
-    const nameIn = document.getElementById('clientName');
-    const dniIn = document.getElementById('clientDni');
-    const birthIn = document.getElementById('clientBirthDate');
-    const phoneIn = document.getElementById('clientPhone');
-
-    if (nameIn) nameIn.value = u.fullName;
-    if (dniIn) dniIn.value = u.dni;
-    if (birthIn) birthIn.value = u.birthDate;
-    if (phoneIn) phoneIn.value = u.phone;
-  }
-
-  populateBarbershops() {
-    const select = document.getElementById('clientBarbershop');
-    if (!select) return;
-
-    const shops = window.turneroStore.getAvailableBarbershops();
-    select.innerHTML = shops.map(s => `<option value="${s}">💈 ${s}</option>`).join('');
-    select.addEventListener('change', () => this.updateSummarySidebar());
   }
 
   setupNavigation() {
@@ -288,14 +268,18 @@ class ClientPortalController {
 
   updateSummarySidebar() {
     const u = this.currentUser;
-    const shopSelect = document.getElementById('clientBarbershop');
 
-    document.getElementById('summaryClientName').textContent = u.fullName;
-    document.getElementById('summaryClientDni').textContent = u.dni;
-    document.getElementById('summaryClientPhone').textContent = u.phone;
-    document.getElementById('summaryBarbershop').textContent = shopSelect ? shopSelect.value : 'Peluquería Central';
-    document.getElementById('summaryDate').textContent = window.turneroStore.formatDateDisplay(this.selectedDateStr);
-    document.getElementById('summaryTime').textContent = this.selectedTimeSlot ? `${this.selectedTimeSlot} hs` : 'Elegir horario libre';
+    const nameEl = document.getElementById('summaryClientName');
+    const dniEl = document.getElementById('summaryClientDni');
+    const phoneEl = document.getElementById('summaryClientPhone');
+    const dateEl = document.getElementById('summaryDate');
+    const timeEl = document.getElementById('summaryTime');
+
+    if (nameEl) nameEl.textContent = u.fullName;
+    if (dniEl) dniEl.textContent = u.dni;
+    if (phoneEl) phoneEl.textContent = u.phone;
+    if (dateEl) dateEl.textContent = window.turneroStore.formatDateDisplay(this.selectedDateStr);
+    if (timeEl) timeEl.textContent = this.selectedTimeSlot ? `${this.selectedTimeSlot} hs` : 'Elegir horario libre';
 
     const btnConfirm = document.getElementById('btnConfirmBooking');
     if (btnConfirm) {
@@ -325,9 +309,6 @@ class ClientPortalController {
           return;
         }
 
-        const shop = document.getElementById('clientBarbershop')?.value || 'Peluquería Central';
-        const notes = document.getElementById('clientNotes')?.value.trim() || '';
-
         try {
           const newTurn = window.turneroStore.createAppointment({
             date: this.selectedDateStr,
@@ -336,9 +317,7 @@ class ClientPortalController {
             clientName: this.currentUser.fullName,
             clientBirthDate: this.currentUser.birthDate,
             clientDni: this.currentUser.dni,
-            clientPhone: this.currentUser.phone,
-            barbershop: shop,
-            notes
+            clientPhone: this.currentUser.phone
           });
 
           if (window.barberNotificationEngine) {
@@ -354,13 +333,9 @@ class ClientPortalController {
           document.getElementById('ticketClient').textContent = newTurn.clientName;
           document.getElementById('ticketDni').textContent = newTurn.clientDni;
           document.getElementById('ticketPhone').textContent = newTurn.clientPhone;
-          document.getElementById('ticketShop').textContent = newTurn.barbershop;
           document.getElementById('ticketDateTime').textContent = `${window.turneroStore.formatDateDisplay(newTurn.date)} a las ${newTurn.time} hs`;
 
           if (modalSuccess) modalSuccess.classList.add('active');
-
-          const notesIn = document.getElementById('clientNotes');
-          if (notesIn) notesIn.value = '';
 
           this.selectedTimeSlot = null;
           this.renderCalendar();
@@ -411,7 +386,7 @@ class ClientPortalController {
     if (myTurns.length === 0) {
       tbody.innerHTML = `
         <tr>
-          <td colspan="5" style="text-align:center; padding: 36px; color: var(--text-muted);">
+          <td colspan="3" style="text-align:center; padding: 36px; color: var(--text-muted);">
             Todavía no solicitaste ningún turno. Podés elegir día y horario desde la pestaña <strong>Solicitar Turno</strong>.
           </td>
         </tr>
@@ -429,8 +404,6 @@ class ClientPortalController {
       <tr>
         <td><strong>${window.turneroStore.formatDateDisplay(turn.date)}</strong></td>
         <td><span class="time-cell-badge">${turn.time} hs</span></td>
-        <td>💈 ${turn.barbershop || 'Peluquería Central'}</td>
-        <td style="color: var(--text-muted);">${turn.notes || 'Corte de pelo'}</td>
         <td>${statusBadgeMap[turn.status] || statusBadgeMap['pendiente']}</td>
       </tr>
     `).join('');
@@ -440,4 +413,3 @@ class ClientPortalController {
 document.addEventListener('DOMContentLoaded', () => {
   window.clientPortal = new ClientPortalController();
 });
-

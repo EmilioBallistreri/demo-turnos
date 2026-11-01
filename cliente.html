@@ -54,7 +54,7 @@
 
   <main>
     <!-- ========================================================================
-         SECCIÓN 1: SOLICITAR TURNO (CALENDARIO DÍAS/MESES/HORAS + DATOS PRECARGADOS)
+         SECCIÓN 1: SOLICITAR TURNO (CALENDARIO DÍAS/MESES/HORAS)
          ======================================================================== -->
     <section id="viewClientBooking" class="view-section active">
 
@@ -78,7 +78,7 @@
       <div class="booking-flow-container">
         <div class="booking-steps-column">
 
-          <!-- PASO 1: TURNERO (MESES, DÍAS Y HORARIOS DISPONIBLES / OCUPADOS) -->
+          <!-- TURNERO (MESES, DÍAS Y HORARIOS DISPONIBLES / OCUPADOS) -->
           <div class="step-card" id="stepCalendar">
             <div class="step-header">
               <div class="step-title-wrap">
@@ -139,66 +139,9 @@
             </div>
           </div>
 
-          <!-- PASO 2: DATOS PRECARGADOS DEL CLIENTE + PELUQUERÍA -->
-          <div class="step-card" id="stepClientData">
-            <div class="step-header">
-              <div class="step-title-wrap">
-                <div class="step-number">2</div>
-                <div>
-                  <h3>Tus Datos Cargados para el Turno</h3>
-                  <p class="step-subtitle">Tus datos de registro ya están listos. Solo elegí la peluquería o agregá una aclaración si querés.</p>
-                </div>
-              </div>
-            </div>
-
-            <div class="client-form-grid">
-              <div class="form-group">
-                <label for="clientName">Nombre y Apellido (Cargado)</label>
-                <div class="form-input-wrap readonly-wrap">
-                  <input type="text" id="clientName" readonly>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label for="clientDni">DNI (Cargado)</label>
-                <div class="form-input-wrap readonly-wrap">
-                  <input type="text" id="clientDni" readonly>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label for="clientBirthDate">Fecha de Nacimiento (Cargada)</label>
-                <div class="form-input-wrap readonly-wrap">
-                  <input type="date" id="clientBirthDate" readonly>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label for="clientPhone">Número de Teléfono (Cargado)</label>
-                <div class="form-input-wrap readonly-wrap">
-                  <input type="tel" id="clientPhone" readonly>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label for="clientBarbershop">Peluquería <span class="required">*</span></label>
-                <div class="form-input-wrap">
-                  <select id="clientBarbershop" class="auth-select"></select>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label for="clientNotes">Servicio / Aclaración (Opcional)</label>
-                <div class="form-input-wrap">
-                  <input type="text" id="clientNotes" placeholder="Ej: Corte clásico, degradé, perfilado de barba...">
-                </div>
-              </div>
-            </div>
-          </div>
-
         </div>
 
-        <!-- Resumen Lateral del Turno -->
+        <!-- Resumen Lateral del Turno (Sin línea de Peluquería) -->
         <aside class="booking-summary-sidebar">
           <div class="summary-card">
             <h3 class="summary-title">
@@ -220,16 +163,12 @@
                 <span class="summary-value" id="summaryClientPhone">-</span>
               </div>
               <div class="summary-row">
-                <span class="summary-label">Peluquería:</span>
-                <span class="summary-value" id="summaryBarbershop">-</span>
-              </div>
-              <div class="summary-row">
                 <span class="summary-label">Fecha:</span>
                 <span class="summary-value" id="summaryDate">-</span>
               </div>
               <div class="summary-row">
                 <span class="summary-label">Horario:</span>
-                <span class="summary-value highlight" id="summaryTime">Seleccionar horario</span>
+                <span class="summary-value highlight" id="summaryTime">Elegir horario libre</span>
               </div>
             </div>
 
@@ -269,8 +208,6 @@
                 <tr>
                   <th>Fecha</th>
                   <th>Horario</th>
-                  <th>Peluquería</th>
-                  <th>Detalle / Aclaración</th>
                   <th>Estado del Turno</th>
                 </tr>
               </thead>
@@ -309,10 +246,6 @@
             <div class="ticket-row">
               <span>Teléfono:</span>
               <span id="ticketPhone">-</span>
-            </div>
-            <div class="ticket-row">
-              <span>Peluquería:</span>
-              <span id="ticketShop">-</span>
             </div>
             <div class="ticket-row">
               <span>Fecha y Hora:</span>

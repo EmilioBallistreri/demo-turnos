@@ -3225,3 +3225,16 @@ body {
 .history-search-wrap input:focus {
   border-color: var(--primary);
 }
+
+
+/* ==========================================================================
+   MODAL POP-UP DE REGISTRO E INICIO DE SESIÓN
+   ========================================================================== */
+.auth-modal-container {
+  max-width: 720px;
+  width: 94%;
+  max-height: 90vh;
+  overflow-y: auto;
+  border: 1px solid var(--border-gold);
+  box-shadow: var(--shadow-lg), var(--shadow-glow);
+}

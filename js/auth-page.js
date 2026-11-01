@@ -1,5 +1,5 @@
 /**
- * Controlador de la pantalla de Inicio de Sesión y Registro (index.html)
+ * Controlador de la pantalla de Inicio de Sesión y Registro con Pop-up Modal (index.html)
  */
 
 class AuthPageController {
@@ -16,7 +16,7 @@ class AuthPageController {
     }
 
     this.checkActiveSessionBanner();
-    this.setupModeCards();
+    this.setupModeCardsAndModal();
     this.setupBarbershopsTags();
     this.setupForms();
     this.renderQuickAccounts();
@@ -42,12 +42,30 @@ class AuthPageController {
     `;
   }
 
-  setupModeCards() {
+  setupModeCardsAndModal() {
     const cards = document.querySelectorAll('.auth-role-card');
+    const modal = document.getElementById('authPopupModal');
+    const modalTitle = document.getElementById('authModalTitle');
+    const btnClose = document.getElementById('btnCloseAuthModal');
+
     const formMap = {
-      'register-cliente': document.getElementById('formRegisterCliente'),
-      'register-peluquero': document.getElementById('formRegisterPeluquero'),
-      'login': document.getElementById('formLogin')
+      'register-cliente': {
+        el: document.getElementById('formRegisterCliente'),
+        title: '👤 Registrarse como Cliente'
+      },
+      'register-peluquero': {
+        el: document.getElementById('formRegisterPeluquero'),
+        title: '✂️ Registrarse como Peluquero'
+      },
+      'login': {
+        el: document.getElementById('formLogin'),
+        title: '🔑 Iniciar Sesión'
+      }
+    };
+
+    const closeModal = () => {
+      if (modal) modal.classList.remove('active');
+      cards.forEach(c => c.classList.remove('active'));
     };
 
     cards.forEach(card => {
@@ -56,15 +74,38 @@ class AuthPageController {
         cards.forEach(c => c.classList.remove('active'));
         card.classList.add('active');
 
-        Object.entries(formMap).forEach(([key, formEl]) => {
-          if (!formEl) return;
+        Object.entries(formMap).forEach(([key, config]) => {
+          if (!config.el) return;
           if (key === mode) {
-            formEl.classList.add('active');
+            config.el.classList.add('active');
+            if (modalTitle) modalTitle.textContent = config.title;
           } else {
-            formEl.classList.remove('active');
+            config.el.classList.remove('active');
           }
         });
+
+        if (modal) {
+          modal.classList.add('active');
+        }
       });
+    });
+
+    if (btnClose) {
+      btnClose.addEventListener('click', closeModal);
+    }
+
+    if (modal) {
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          closeModal();
+        }
+      });
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal && modal.classList.contains('active')) {
+        closeModal();
+      }
     });
   }
 
@@ -212,7 +253,7 @@ class AuthPageController {
         if (!user) {
           if (errBox) {
             errBox.style.display = 'block';
-            errBox.textContent = 'No se encontró ningún usuario registrado con ese DNI. Podés registrarte arriba como Cliente o como Peluquero.';
+            errBox.textContent = 'No se encontró ningún usuario registrado con ese DNI. Podés registrarte como Cliente o como Peluquero.';
           }
           return;
         }
@@ -259,4 +300,3 @@ class AuthPageController {
 document.addEventListener('DOMContentLoaded', () => {
   new AuthPageController();
 });
-

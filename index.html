@@ -42,15 +42,15 @@
         <span class="hero-badge">✦ Acceso a la Aplicación Web</span>
         <h2 class="auth-main-title">Bienvenido al Turnero de Peluquería</h2>
         <p class="auth-main-subtitle">
-          Para ingresar a la plataforma, seleccioná cómo querés registrarte o iniciá sesión con tu DNI.
+          Seleccioná una opción para abrir la ventana de registro o iniciar sesión con tu DNI.
           Cada perfil accede a una web exclusiva según su rol.
         </p>
       </div>
 
-      <!-- Selector Principal de Modo: Registrarse como Cliente | Registrarse como Peluquero | Iniciar Sesión -->
+      <!-- Selector Principal de Modo: al hacer clic abre el Pop-up Modal -->
       <div class="auth-role-cards-grid" id="roleSelectorCards">
         <!-- OPCIÓN 1: REGISTRARSE COMO CLIENTE -->
-        <div class="auth-role-card active" data-auth-mode="register-cliente" id="cardRoleCliente">
+        <div class="auth-role-card" data-auth-mode="register-cliente" id="cardRoleCliente">
           <div class="role-card-badge">Opción 1</div>
           <div class="role-card-icon">👤</div>
           <h3>Registrarme como Cliente</h3>
@@ -62,7 +62,7 @@
             <li>✓ Datos precargados al solicitar turno</li>
             <li>✓ Calendario de días, meses y horas libres/ocupadas</li>
           </ul>
-          <span class="role-card-cta">Completar Registro de Cliente →</span>
+          <span class="role-card-cta">Abrir Registro de Cliente →</span>
         </div>
 
         <!-- OPCIÓN 2: REGISTRARSE COMO PELUQUERO -->
@@ -78,7 +78,7 @@
             <li>✓ Turnero con clientes anotados por día y hora</li>
             <li>✓ Historial y cambio de estado (Pendiente, Atendido, No atendido)</li>
           </ul>
-          <span class="role-card-cta">Completar Registro de Peluquero →</span>
+          <span class="role-card-cta">Abrir Registro de Peluquero →</span>
         </div>
 
         <!-- OPCIÓN 3: INICIAR SESIÓN (YA REGISTRADO) -->
@@ -94,17 +94,27 @@
             <li>✓ Redirección automática según tu rol</li>
             <li>✓ Cuentas de demostración disponibles</li>
           </ul>
-          <span class="role-card-cta">Ingresar con mi DNI →</span>
+          <span class="role-card-cta">Abrir Inicio de Sesión →</span>
         </div>
       </div>
 
-      <!-- ======================================================================
-           CONTENEDOR DE FORMULARIOS
-           ====================================================================== -->
-      <div class="auth-form-panel">
+    </div>
+  </main>
+
+  <!-- ==========================================================================
+       POP-UP MODAL DE REGISTRO E INICIO DE SESIÓN
+       ========================================================================== -->
+  <div class="modal-backdrop" id="authPopupModal">
+    <div class="modal-container auth-modal-container">
+      <div class="modal-header">
+        <h3 id="authModalTitle">Acceso al Turnero</h3>
+        <button type="button" class="btn-close-modal" id="btnCloseAuthModal" title="Cerrar">✕</button>
+      </div>
+
+      <div class="modal-body">
 
         <!-- FORMULARIO 1: REGISTRO DE CLIENTE -->
-        <form id="formRegisterCliente" class="auth-form-section active">
+        <form id="formRegisterCliente" class="auth-form-section">
           <div class="auth-form-header">
             <div class="auth-form-icon">👤</div>
             <div>
@@ -267,7 +277,7 @@
 
       </div>
     </div>
-  </main>
+  </div>
 
   <footer class="app-footer">
     <div class="footer-inner">
