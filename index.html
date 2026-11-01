@@ -3,623 +3,285 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Turnero Peluquería | Calendario & Horarios</title>
-  <meta name="description" content="Turnero online de peluquería. Consultá fechas y horarios disponibles, agendá tu turno de corte y recibí recordatorio automático 30 minutos antes.">
+  <title>Turnero Peluquería | Iniciar Sesión o Registrarse</title>
+  <meta name="description" content="Aplicación web de turnos de peluquería. Registrate como cliente o como peluquero e ingresá a tu panel exclusivo.">
   <link rel="stylesheet" href="css/style.css">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23cda34f'><circle cx='6' cy='6' r='3'/><circle cx='6' cy='18' r='3'/><line x1='20' y1='4' x2='8.12' y2='15.88'/><line x1='14.47' y1='14.48' x2='20' y2='20'/><line x1='8.12' y1='8.12' x2='12' y2='12'/></svg>">
 </head>
-<body>
+<body class="auth-page-body">
 
   <!-- ==========================================================================
-       HEADER PRINCIPAL
+       HEADER SIMPLE DE BIENVENIDA
        ========================================================================== -->
   <header class="main-header">
     <div class="header-container">
-      <div class="brand-wrapper" id="brandLogo">
+      <div class="brand-wrapper">
         <div class="brand-icon-box">
           <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>
         </div>
         <div class="brand-info">
           <h1>Turnero Peluquería</h1>
-          <p>Calendario de Fechas y Horarios Online</p>
+          <p>Plataforma Web para Clientes y Peluqueros</p>
         </div>
       </div>
 
-      <!-- Navigation Tabs -->
-      <nav class="nav-tabs-bar" aria-label="Navegación del turnero">
-        <button type="button" class="nav-tab-btn active" data-target-view="viewBooking" id="tabBooking">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-          <span>Agendar Turno</span>
-        </button>
-        <button type="button" class="nav-tab-btn" data-target-view="viewTurnero" id="tabTurnero">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-          <span>Turnero General</span>
-        </button>
-        <button type="button" class="nav-tab-btn" data-target-view="viewNotifications" id="tabNotifications">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-          <span>Avisos (30 min)</span>
-          <span class="badge-count notification-badge-target" style="display:none;">0</span>
-        </button>
-      </nav>
-
-      <div class="header-actions">
-        <div class="header-status-pill">
-          <span class="status-icon"></span>
-          <span>Turnero Activo</span>
-        </div>
+      <div class="header-actions" id="activeSessionBanner" style="display: none;">
+        <!-- Se muestra si ya hay sesión iniciada -->
       </div>
     </div>
   </header>
 
-  <main>
-    <!-- ==========================================================================
-         VISTA 1: AGENDAR TURNO (CALENDARIO + HORARIOS)
-         ========================================================================== -->
-    <section id="viewBooking" class="view-section active">
-      <!-- Salon Banner -->
-      <div class="booking-hero">
-        <div class="hero-backdrop" style="background-image: url('assets/images/hero-salon.jpg');">
-          <div class="hero-overlay"></div>
-          <div class="hero-content">
-            <div class="hero-text-block">
-              <span class="hero-badge">✦ Agenda de Turnos</span>
-              <h2 class="hero-title">Elegí tu fecha y horario para cortarte el pelo</h2>
-              <p class="hero-subtitle">Seleccioná el día en el calendario, elegí el horario disponible que te quede más cómodo y recibí un aviso recordatorio 30 minutos antes en tu WhatsApp.</p>
-              
-              <div class="hero-salon-specs">
-                <div class="spec-item">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                  <span>Horarios: Lun a Sáb de 09:00 a 20:30 hs</span>
-                </div>
-                <div class="spec-item">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                  <span>Aviso automático 30 min antes a clientes y peluqueros</span>
-                </div>
-              </div>
-            </div>
+  <!-- ==========================================================================
+       PORTAL DE INICIO DE SESIÓN Y REGISTRO (CLIENTE / PELUQUERO)
+       ========================================================================== -->
+  <main class="auth-portal-main">
+    <div class="auth-portal-container">
 
-            <div class="hero-cta-quick">
-              <button type="button" class="btn-book-hero" onclick="document.getElementById('stepCalendar').scrollIntoView({ behavior: 'smooth' });">
-                <span>Ver Calendario</span>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-              </button>
-            </div>
-          </div>
+      <!-- Encabezado de Bienvenida -->
+      <div class="auth-hero-header">
+        <span class="hero-badge">✦ Acceso a la Aplicación Web</span>
+        <h2 class="auth-main-title">Bienvenido al Turnero de Peluquería</h2>
+        <p class="auth-main-subtitle">
+          Para ingresar a la plataforma, seleccioná cómo querés registrarte o iniciá sesión con tu DNI.
+          Cada perfil accede a una web exclusiva según su rol.
+        </p>
+      </div>
+
+      <!-- Selector Principal de Modo: Registrarse como Cliente | Registrarse como Peluquero | Iniciar Sesión -->
+      <div class="auth-role-cards-grid" id="roleSelectorCards">
+        <!-- OPCIÓN 1: REGISTRARSE COMO CLIENTE -->
+        <div class="auth-role-card active" data-auth-mode="register-cliente" id="cardRoleCliente">
+          <div class="role-card-badge">Opción 1</div>
+          <div class="role-card-icon">👤</div>
+          <h3>Registrarme como Cliente</h3>
+          <p>
+            Cargá tus datos personales una única vez para que queden guardados automáticamente cuando pidas un turno en el calendario.
+          </p>
+          <ul class="role-card-features">
+            <li>✓ Acceso a la Web exclusiva de Clientes</li>
+            <li>✓ Datos precargados al solicitar turno</li>
+            <li>✓ Calendario de días, meses y horas libres/ocupadas</li>
+          </ul>
+          <span class="role-card-cta">Completar Registro de Cliente →</span>
+        </div>
+
+        <!-- OPCIÓN 2: REGISTRARSE COMO PELUQUERO -->
+        <div class="auth-role-card" data-auth-mode="register-peluquero" id="cardRolePeluquero">
+          <div class="role-card-badge gold">Opción 2</div>
+          <div class="role-card-icon">✂️</div>
+          <h3>Registrarme como Peluquero</h3>
+          <p>
+            Registrate con tus datos personales y el nombre de la peluquería o peluquerías donde trabajás para gestionar tus turnos.
+          </p>
+          <ul class="role-card-features">
+            <li>✓ Acceso a la Web exclusiva de Peluqueros</li>
+            <li>✓ Turnero con clientes anotados por día y hora</li>
+            <li>✓ Historial y cambio de estado (Pendiente, Atendido, No atendido)</li>
+          </ul>
+          <span class="role-card-cta">Completar Registro de Peluquero →</span>
+        </div>
+
+        <!-- OPCIÓN 3: INICIAR SESIÓN (YA REGISTRADO) -->
+        <div class="auth-role-card" data-auth-mode="login" id="cardRoleLogin">
+          <div class="role-card-badge subtle">Ya tengo cuenta</div>
+          <div class="role-card-icon">🔑</div>
+          <h3>Iniciar Sesión</h3>
+          <p>
+            Si ya te registraste previamente como cliente o como peluquero, ingresá con tu número de DNI para ir a tu web.
+          </p>
+          <ul class="role-card-features">
+            <li>✓ Ingreso rápido con tu DNI</li>
+            <li>✓ Redirección automática según tu rol</li>
+            <li>✓ Cuentas de demostración disponibles</li>
+          </ul>
+          <span class="role-card-cta">Ingresar con mi DNI →</span>
         </div>
       </div>
 
-      <!-- Tools Showcase Strip -->
-      <div class="tools-strip-wrap">
-        <div class="tools-strip">
-          <div class="tools-info">
-            <img src="assets/images/tools.jpg" alt="Herramientas de peluquería" class="tools-thumb">
+      <!-- ======================================================================
+           CONTENEDOR DE FORMULARIOS
+           ====================================================================== -->
+      <div class="auth-form-panel">
+
+        <!-- FORMULARIO 1: REGISTRO DE CLIENTE -->
+        <form id="formRegisterCliente" class="auth-form-section active">
+          <div class="auth-form-header">
+            <div class="auth-form-icon">👤</div>
             <div>
-              <h4>Turnero de Peluquería & Barbería</h4>
-              <p>Consultá las fechas y horas disponibles. Los horarios ocupados quedan bloqueados automáticamente.</p>
+              <h3>Registro de Cliente</h3>
+              <p>Estos datos quedarán guardados en la web para cuando solicites un turno.</p>
             </div>
           </div>
-          <div class="tools-badges">
-            <span>🟢 Verde = Horario Libre</span>
-            <span>🔴 Rojo = Horario Ocupado</span>
-            <span>⏰ Aviso 30 min antes</span>
-          </div>
-        </div>
-      </div>
 
-      <!-- Booking Flow -->
-      <div class="booking-flow-container">
-        <!-- Steps Column -->
-        <div class="booking-steps-column">
-
-          <!-- STEP 1: CALENDAR (DAY, MONTH, YEAR) & TIME SLOTS -->
-          <div class="step-card" id="stepCalendar">
-            <div class="step-header">
-              <div class="step-title-wrap">
-                <div class="step-number">1</div>
-                <div>
-                  <h3>Calendario de Fechas y Horarios</h3>
-                  <p class="step-subtitle">Seleccioná un día del calendario para ver los horarios disponibles y ocupados</p>
-                </div>
+          <div class="auth-fields-grid">
+            <div class="form-group">
+              <label for="cliFullName">Nombre y Apellido <span class="required">*</span></label>
+              <div class="form-input-wrap">
+                <input type="text" id="cliFullName" placeholder="Ej: Juan Ignacio Morales" required>
               </div>
             </div>
 
-            <div class="calendar-time-layout">
-              <!-- Interactive Calendar Widget -->
-              <div class="calendar-widget">
-                <div class="calendar-nav-bar">
-                  <span class="cal-month-year" id="calendarMonthYear">Octubre 2026</span>
-                  <div class="calendar-controls">
-                    <button type="button" class="cal-nav-btn" id="btnPrevMonth" title="Mes anterior">‹</button>
-                    <button type="button" class="cal-nav-btn" id="btnNextMonth" title="Mes siguiente">›</button>
-                  </div>
-                </div>
-
-                <div class="calendar-weekdays">
-                  <span>Lu</span>
-                  <span>Ma</span>
-                  <span>Mi</span>
-                  <span>Ju</span>
-                  <span>Vi</span>
-                  <span>Sá</span>
-                  <span>Do</span>
-                </div>
-
-                <div class="calendar-grid-days" id="calendarGridDays">
-                  <!-- Dynamically rendered by app.js -->
-                </div>
-
-                <div class="calendar-legend">
-                  <div class="legend-item"><span class="legend-dot avail"></span><span>Disponible</span></div>
-                  <div class="legend-item"><span class="legend-dot busy"></span><span>Ocupado</span></div>
-                  <div class="legend-item"><span class="legend-dot selected"></span><span>Seleccionado</span></div>
-                </div>
+            <div class="form-group">
+              <label for="cliBirthDate">Fecha de Nacimiento <span class="required">*</span></label>
+              <div class="form-input-wrap">
+                <input type="date" id="cliBirthDate" required>
               </div>
+            </div>
 
-              <!-- Time Slots Grid -->
-              <div class="time-slots-panel">
-                <div class="slots-header-info">
-                  <div class="selected-date-preview">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                    <h4 id="selectedDatePreviewText">Fecha seleccionada</h4>
-                  </div>
-                  <span class="slot-availability-count" id="slotAvailCounter">Turnos libres</span>
-                </div>
+            <div class="form-group">
+              <label for="cliDni">DNI <span class="required">*</span></label>
+              <div class="form-input-wrap">
+                <input type="text" id="cliDni" placeholder="Ej: 40123456" inputmode="numeric" required>
+              </div>
+            </div>
 
-                <div class="slots-group-container" id="slotsGroupContainer">
-                  <!-- Rendered dynamically by app.js: Mañana, Tarde, Noche -->
-                </div>
+            <div class="form-group">
+              <label for="cliPhone">Número de Teléfono <span class="required">*</span></label>
+              <div class="form-input-wrap">
+                <input type="tel" id="cliPhone" placeholder="Ej: +54 9 11 4589-2311" required>
               </div>
             </div>
           </div>
 
-          <!-- STEP 2: Client Info -->
-          <div class="step-card" id="stepClientData">
-            <div class="step-header">
-              <div class="step-title-wrap">
-                <div class="step-number">2</div>
-                <div>
-                  <h3>Datos para Agendar el Turno</h3>
-                  <p class="step-subtitle">Ingresá tu nombre y teléfono para anotarte y recibir el aviso de recordatorio 30 minutos antes</p>
-                </div>
-              </div>
+          <div class="auth-form-footer">
+            <div class="auth-info-note">
+              <span>🔒 Al registrarte ingresarás directamente a la <strong>Web de Clientes</strong> con tus datos cargados.</span>
             </div>
-
-            <div class="client-form-grid">
-              <div class="form-group">
-                <label for="clientName">Nombre y Apellido <span class="required">*</span></label>
-                <div class="form-input-wrap">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                  <input type="text" id="clientName" placeholder="Ej: Lucas González" required>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label for="clientPhone">WhatsApp / Teléfono <span class="required">*</span></label>
-                <div class="form-input-wrap">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-                  <input type="tel" id="clientPhone" placeholder="+54 9 11 4589-2311" required>
-                </div>
-                <span class="form-input-hint">⏰ A este número te llegará el aviso de WhatsApp 30 minutos antes</span>
-              </div>
-
-              <div class="form-group full-width">
-                <label for="clientNotes">Aclaraciones (Opcional)</label>
-                <div class="form-input-wrap">
-                  <input type="text" id="clientNotes" placeholder="Ej: Corte clásico, fade, barba, etc.">
-                </div>
-              </div>
-            </div>
-          </div>
-
-        </div>
-
-        <!-- Summary Sidebar -->
-        <aside class="booking-summary-sidebar">
-          <div class="summary-card">
-            <h3 class="summary-title">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-              <span>Resumen del Turno</span>
-            </h3>
-
-            <div class="summary-rows">
-              <div class="summary-row">
-                <span class="summary-label">Fecha:</span>
-                <span class="summary-value" id="summaryDate">-</span>
-              </div>
-              <div class="summary-row">
-                <span class="summary-label">Horario:</span>
-                <span class="summary-value highlight" id="summaryTime">Seleccionar en la lista</span>
-              </div>
-              <div class="summary-row">
-                <span class="summary-label">Estado:</span>
-                <span class="summary-value" style="color: var(--success);">Disponible para agendar</span>
-              </div>
-            </div>
-
-            <button type="button" class="btn-confirm-booking" id="btnConfirmBooking">
-              <span>Agendar Turno Ahora</span>
+            <button type="submit" class="btn-confirm-booking auth-submit-btn">
+              <span>Registrarme como Cliente e Ingresar</span>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
             </button>
-
-            <div class="booking-guarantee-note">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-              <span>El peluquero recibe el aviso de inmediato y se agenda el recordatorio de 30 minutos.</span>
-            </div>
           </div>
-        </aside>
-      </div>
-    </section>
+        </form>
 
-    <!-- ==========================================================================
-         VISTA 2: TURNERO GENERAL (DISPONIBLES Y OCUPADOS)
-         ========================================================================== -->
-    <section id="viewTurnero" class="view-section">
-      <div class="dashboard-container">
-        <!-- Toolbar -->
-        <div class="turnero-top-bar">
-          <div class="turnero-title-area">
-            <h2>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-              <span>Turnero de la Peluquería</span>
-            </h2>
-            <p>Visualización de horarios disponibles y ocupados por fecha</p>
-          </div>
-
-          <div class="turnero-filter-controls">
-            <!-- Date Filter -->
-            <div class="date-badge-selector">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></svg>
-              <input type="date" id="turneroDateFilter">
-            </div>
-
-            <!-- Manual Add Turn -->
-            <button type="button" class="btn-manual-turn" id="btnOpenManualTurnModal">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-              <span>➕ Anotar Turno Manual</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- KPIs Overview -->
-        <div class="turnero-kpis-grid">
-          <div class="kpi-card">
-            <div class="kpi-icon-box gold">📅</div>
-            <div class="kpi-info-box">
-              <span class="kpi-label">Turnos del Día</span>
-              <span class="kpi-number" id="kpiTotalTurns">0</span>
-              <span class="kpi-trend">Hoy</span>
+        <!-- FORMULARIO 2: REGISTRO DE PELUQUERO -->
+        <form id="formRegisterPeluquero" class="auth-form-section">
+          <div class="auth-form-header">
+            <div class="auth-form-icon gold">✂️</div>
+            <div>
+              <h3>Registro de Peluquero</h3>
+              <p>Completá tus datos personales y el nombre de la peluquería o peluquerías donde trabajás.</p>
             </div>
           </div>
 
-          <div class="kpi-card">
-            <div class="kpi-icon-box green">📊</div>
-            <div class="kpi-info-box">
-              <span class="kpi-label">Ocupación del Salón</span>
-              <span class="kpi-number" id="kpiOccupancy">0%</span>
-              <span class="kpi-trend">Turnos reservados</span>
-            </div>
-          </div>
-
-          <div class="kpi-card">
-            <div class="kpi-icon-box orange">⏰</div>
-            <div class="kpi-info-box">
-              <span class="kpi-label">Próximo Turno</span>
-              <span class="kpi-number" id="kpiNextTurn" style="font-size: 1.15rem;">Cargando...</span>
-              <span class="kpi-trend" style="color: var(--warning);">⚡ Aviso 30 min antes</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Main Turnero Board Table -->
-        <div class="turnero-main-board">
-          <div class="turnero-board-header">
-            <h3>
-              <span>Horarios del Día: Turnos Disponibles y Ocupados</span>
-            </h3>
-            <div class="board-live-pulse">
-              <span>Sincronizado en Tiempo Real</span>
-            </div>
-          </div>
-
-          <div class="turnero-table-wrap">
-            <table class="turnero-table">
-              <thead>
-                <tr>
-                  <th>Horario</th>
-                  <th>Estado del Turno</th>
-                  <th>Cliente & Teléfono</th>
-                  <th>Detalle / Aclaración</th>
-                  <th>Acciones</th>
-                </tr>
-              </thead>
-              <tbody id="turneroTableBody">
-                <!-- Rendered dynamically by turnero.js -->
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ==========================================================================
-         VISTA 3: AVISOS & RECORDATORIOS (30 MIN)
-         ========================================================================== -->
-    <section id="viewNotifications" class="view-section">
-      <div class="notifications-view-container">
-        
-        <!-- Banner -->
-        <div class="reminder-system-banner">
-          <div class="reminder-banner-content">
-            <span class="hero-badge" style="margin-bottom: 8px; display:inline-block;">SISTEMA DE NOTIFICACIONES</span>
-            <h2>Avisos de Reserva y Recordatorios de 30 Minutos</h2>
-            <p>
-              Cuando un cliente reserva, el peluquero recibe una notificación instantánea sobre quién se anotó y para qué horario. 
-              Además, <strong>30 minutos antes del turno</strong>, el cliente recibe un recordatorio en su WhatsApp y el peluquero recibe la alerta para saber que tiene otro turno próximo.
-            </p>
-          </div>
-
-          <div class="reminder-demo-controls">
-            <button type="button" class="btn-trigger-reminder" id="btnCenterSimulate30Min">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-              <span>⚡ Probar Alerta de 30 min (Simular Ahora)</span>
-            </button>
-            <button type="button" class="btn-trigger-new-booking" onclick="document.getElementById('tabBooking').click();">
-              <span>➕ Agendar Nuevo Turno</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- Dual Device Simulator -->
-        <div class="simulation-dual-grid">
-          
-          <!-- Cliente (WhatsApp) -->
-          <div class="device-showcase-card">
-            <div class="device-card-header">
-              <h3>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
-                <span>WhatsApp del Cliente</span>
-              </h3>
-              <span class="device-badge client">Recordatorio 30m</span>
-            </div>
-
-            <div class="smartphone-mockup">
-              <div class="phone-top-speaker"></div>
-              
-              <div class="phone-screen-header">
-                <div class="whatsapp-contact-avatar">✂️</div>
-                <div class="whatsapp-contact-info">
-                  <h4>Turnero Peluquería</h4>
-                  <span>En línea • Confirmaciones</span>
-                </div>
-              </div>
-
-              <div class="phone-chat-body">
-                <div class="chat-bubble-whatsapp" id="mockupClientBubble">
-                  <strong>💈 Recordatorio de Turno</strong><br><br>
-                  ¡Hola <strong>Martín</strong>! Te recordamos que en <strong>30 minutos</strong> (16:30 hs) tenés tu turno reservado para cortarte el pelo.<br><br>
-                  📍 <strong>Lugar:</strong> Peluquería Central<br><br>
-                  <em>¡Te esperamos puntual!</em>
-                  <div class="bubble-time" id="mockupBubbleTime">16:00 ✓✓</div>
-                </div>
-              </div>
-            </div>
-            <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 14px; text-align: center;">
-              Aviso automático 30 minutos antes para que el cliente no se olvide de asistir a cortarse el pelo.
-            </p>
-          </div>
-
-          <!-- Peluquero (Pantalla / Tablet) -->
-          <div class="device-showcase-card">
-            <div class="device-card-header">
-              <h3>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
-                <span>Aviso al Peluquero (Pantalla / Celular)</span>
-              </h3>
-              <span class="device-badge barber">Alerta 30 min</span>
-            </div>
-
-            <div class="barber-tablet-mockup">
-              <div class="tablet-banner-alert">
-                <div class="alert-header-row">
-                  <span class="alert-type-badge">🔔 Próximo Turno</span>
-                  <span class="alert-countdown" id="tabletAlertTime">COMIENZA EN 30 MIN</span>
-                </div>
-                <div class="alert-body-content">
-                  <h4 id="tabletAlertTitle">Próximo turno en 30 min: Martín Pérez</h4>
-                  <p id="tabletAlertDesc">
-                    <strong>Horario:</strong> 16:30 hs<br>
-                    <strong>Cliente:</strong> Martín Pérez<br>
-                    <strong>Teléfono:</strong> +54 9 11 4589-2311
-                  </p>
-                </div>
-                <div class="alert-actions-bar">
-                  <button type="button" class="btn-alert-action confirm" onclick="alert('Estación de corte marcada como lista');">
-                    ✓ Estación Lista
-                  </button>
-                  <button type="button" class="btn-alert-action call" onclick="alert('Llamando al cliente Martín Pérez (+54 9 11 4589-2311)');">
-                    📞 Llamar Cliente
-                  </button>
-                </div>
-              </div>
-
-              <div style="background: var(--bg-surface); border-radius: var(--radius-md); padding: 14px; border: 1px solid var(--border-subtle);">
-                <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-faint); margin-bottom: 8px;">ESTADO DE LOS TURNOS DE HOY</div>
-                <div style="display: flex; flex-direction: column; gap: 8px; font-size: 0.82rem;">
-                  <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <span>Turno en curso: <strong>Santiago Villar</strong></span>
-                    <span style="color: var(--warning);">Termina pronto</span>
-                  </div>
-                  <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <span>Próximo turno (30 min): <strong>Martín Pérez</strong></span>
-                    <span style="color: var(--primary);">16:30 hs</span>
-                  </div>
-                  <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <span>Siguiente turno: <strong>Rodrigo Méndez</strong></span>
-                    <span style="color: var(--text-muted);">18:30 hs</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 14px; text-align: center;">
-              El peluquero sabe con exactitud quién está anotado para qué horario y recibe la notificación 30 min antes.
-            </p>
-          </div>
-
-        </div>
-
-        <!-- Notification Feed Log -->
-        <div class="notification-history-card">
-          <div class="history-card-header">
-            <h3>Historial de Notificaciones y Turnos Agendados</h3>
-            <span style="font-size: 0.78rem; color: var(--text-muted);">Registro en tiempo real</span>
-          </div>
-
-          <div class="notification-feed" id="notificationFeed">
-            <!-- Dynamically populated by notifications.js -->
-          </div>
-        </div>
-
-      </div>
-    </section>
-  </main>
-
-  <!-- ==========================================================================
-       MODAL: TURNO CONFIRMADO
-       ========================================================================== -->
-  <div class="modal-backdrop" id="bookingSuccessModal">
-    <div class="modal-container">
-      <div class="modal-header">
-        <h3>¡Turno Agendado con Éxito!</h3>
-        <button type="button" class="btn-close-modal" id="btnCloseSuccessModal">✕</button>
-      </div>
-
-      <div class="modal-body">
-        <div class="booking-success-box">
-          <div class="success-check-badge">✓</div>
-          <h2>¡Turno Reservado!</h2>
-          <p>Tu turno quedó anotado en el turnero de la peluquería.</p>
-
-          <div class="ticket-pass-card">
-            <div class="ticket-row">
-              <span>Cliente:</span>
-              <span id="ticketClient">-</span>
-            </div>
-            <div class="ticket-row">
-              <span>Fecha y Hora:</span>
-              <span id="ticketDateTime" style="color: var(--primary);">-</span>
-            </div>
-            <div class="ticket-row">
-              <span>Teléfono:</span>
-              <span id="ticketPhone">-</span>
-            </div>
-          </div>
-
-          <p style="font-size: 0.8rem; color: var(--text-faint); margin-bottom: 16px;">
-            ⏰ Se le notificó al peluquero y recibirás un aviso por WhatsApp <strong>30 minutos antes</strong> de tu turno.
-          </p>
-
-          <div class="ticket-actions-row">
-            <button type="button" class="btn-ticket-action primary" id="btnSimulateReminderFromModal">
-              <span>⚡ Ver aviso de 30 minutos</span>
-            </button>
-            <button type="button" class="btn-ticket-action" onclick="document.getElementById('bookingSuccessModal').classList.remove('active'); document.getElementById('tabTurnero').click();">
-              <span>📋 Ver en el Turnero</span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ==========================================================================
-       MODAL: AGREGAR TURNO MANUAL
-       ========================================================================== -->
-  <div class="modal-backdrop" id="manualTurnModal">
-    <div class="modal-container">
-      <div class="modal-header">
-        <h3>➕ Anotar Turno Manual</h3>
-        <button type="button" class="btn-close-modal" id="btnCloseManualModal">✕</button>
-      </div>
-
-      <form id="manualTurnForm">
-        <div class="modal-body">
-          <div style="display:flex; flex-direction:column; gap: 14px;">
+          <div class="auth-fields-grid">
             <div class="form-group">
-              <label for="manualClientName">Nombre del Cliente <span class="required">*</span></label>
+              <label for="barFullName">Nombre y Apellido <span class="required">*</span></label>
               <div class="form-input-wrap">
-                <input type="text" id="manualClientName" placeholder="Ej: Marcelo Gómez" required>
+                <input type="text" id="barFullName" placeholder="Ej: Nicolás Lombardo" required>
               </div>
             </div>
 
             <div class="form-group">
-              <label for="manualClientPhone">Teléfono / WhatsApp</label>
+              <label for="barBirthDate">Fecha de Nacimiento <span class="required">*</span></label>
               <div class="form-input-wrap">
-                <input type="tel" id="manualClientPhone" placeholder="+54 9 11 1234-5678" value="+54 9 11 ">
+                <input type="date" id="barBirthDate" required>
               </div>
             </div>
 
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-              <div class="form-group">
-                <label for="manualDate">Fecha</label>
-                <input type="date" id="manualDate" style="background:var(--bg-surface-elevated); color:var(--text-main); border:1px solid var(--border-subtle); padding:10px; border-radius:var(--radius-md); width:100%; color-scheme:dark;">
+            <div class="form-group">
+              <label for="barDni">DNI <span class="required">*</span></label>
+              <div class="form-input-wrap">
+                <input type="text" id="barDni" placeholder="Ej: 35112890" inputmode="numeric" required>
               </div>
-              <div class="form-group">
-                <label for="manualTimeSelect">Horario</label>
-                <select id="manualTimeSelect" style="background:var(--bg-surface-elevated); color:var(--text-main); border:1px solid var(--border-subtle); padding:10px; border-radius:var(--radius-md); width:100%;">
-                  <option value="09:00">09:00 hs</option>
-                  <option value="09:45">09:45 hs</option>
-                  <option value="10:30">10:30 hs</option>
-                  <option value="11:15">11:15 hs</option>
-                  <option value="12:00">12:00 hs</option>
-                  <option value="12:45">12:45 hs</option>
-                  <option value="14:00">14:00 hs</option>
-                  <option value="14:45">14:45 hs</option>
-                  <option value="15:30">15:30 hs</option>
-                  <option value="16:15">16:15 hs</option>
-                  <option value="17:00">17:00 hs</option>
-                  <option value="17:45">17:45 hs</option>
-                  <option value="18:30">18:30 hs</option>
-                  <option value="19:15">19:15 hs</option>
-                  <option value="20:00">20:00 hs</option>
+            </div>
+
+            <div class="form-group">
+              <label for="barPhone">Número de Teléfono <span class="required">*</span></label>
+              <div class="form-input-wrap">
+                <input type="tel" id="barPhone" placeholder="Ej: +54 9 11 6789-4321" required>
+              </div>
+            </div>
+
+            <div class="form-group full-width">
+              <label for="barShopsInput">Nombre de la Peluquería o Peluquerías en las que trabaja <span class="required">*</span></label>
+              <div class="shops-input-row">
+                <div class="form-input-wrap" style="flex: 1;">
+                  <input type="text" id="barShopsInput" placeholder="Ej: Peluquería Central, Barbería Norte (separá con coma o tocá '+ Agregar')">
+                </div>
+                <button type="button" class="btn-add-shop" id="btnAddBarbershop">➕ Agregar Peluquería</button>
+              </div>
+              <span class="form-input-hint">Podés cargar una o varias peluquerías donde atendés.</span>
+              <div class="shops-tags-list" id="barShopsTags"></div>
+            </div>
+          </div>
+
+          <div class="auth-form-footer">
+            <div class="auth-info-note">
+              <span>💈 Al registrarte ingresarás directamente a la <strong>Web de Peluqueros</strong>.</span>
+            </div>
+            <button type="submit" class="btn-confirm-booking auth-submit-btn">
+              <span>Registrarme como Peluquero e Ingresar</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+          </div>
+        </form>
+
+        <!-- FORMULARIO 3: INICIAR SESIÓN -->
+        <form id="formLogin" class="auth-form-section">
+          <div class="auth-form-header">
+            <div class="auth-form-icon">🔑</div>
+            <div>
+              <h3>Iniciar Sesión</h3>
+              <p>Ingresá tu DNI y seleccioná tu perfil para entrar a tu web correspondiente.</p>
+            </div>
+          </div>
+
+          <div class="auth-fields-grid">
+            <div class="form-group">
+              <label for="loginDni">Número de DNI <span class="required">*</span></label>
+              <div class="form-input-wrap">
+                <input type="text" id="loginDni" placeholder="Ingresá tu DNI sin puntos" inputmode="numeric" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="loginRole">Ingresar como</label>
+              <div class="form-input-wrap">
+                <select id="loginRole" class="auth-select">
+                  <option value="">Detectar automáticamente por DNI</option>
+                  <option value="cliente">👤 Cliente (Web de Clientes)</option>
+                  <option value="peluquero">✂️ Peluquero (Web de Peluqueros)</option>
                 </select>
               </div>
             </div>
+          </div>
 
-            <div class="form-group">
-              <label for="manualNotes">Aclaraciones</label>
-              <input type="text" id="manualNotes" placeholder="Ej: Vino al local o llamó por teléfono" style="background:var(--bg-surface-elevated); color:var(--text-main); border:1px solid var(--border-subtle); padding:10px; border-radius:var(--radius-md); width:100%;">
+          <div id="loginErrorMsg" class="auth-error-box" style="display: none;"></div>
+
+          <div class="auth-form-footer">
+            <button type="submit" class="btn-confirm-booking auth-submit-btn">
+              <span>Iniciar Sesión</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+          </div>
+
+          <!-- Accesos directos a cuentas registradas / demo -->
+          <div class="quick-demo-accounts">
+            <div class="quick-demo-title">Cuentas registradas para prueba rápida (1 clic):</div>
+            <div class="quick-demo-buttons" id="registeredUsersQuickList">
+              <!-- Poblado dinámicamente desde auth-store.js -->
             </div>
           </div>
-        </div>
+        </form>
 
-        <div class="modal-footer">
-          <button type="button" class="btn-nav-action" onclick="document.getElementById('manualTurnModal').classList.remove('active');">Cancelar</button>
-          <button type="submit" class="btn-confirm-booking" style="padding: 10px 20px; font-size: 0.9rem;">Guardar Turno</button>
-        </div>
-      </form>
+      </div>
     </div>
-  </div>
+  </main>
 
-  <!-- Real-Time Toast Container -->
-  <div class="toast-container" id="toastContainer"></div>
-
-  <!-- Footer -->
   <footer class="app-footer">
     <div class="footer-inner">
       <div class="footer-copy">
-        Turnero Peluquería • Sistema de Gestión de Fechas y Horarios Online
+        Turnero Peluquería • Plataforma Web con Acceso Diferenciado para Clientes y Peluqueros
       </div>
       <div class="footer-specs">
-        <span>⏰ Recordatorios automáticos 30 min antes</span>
-        <span>✂️ Horarios de 09:00 a 20:30 hs</span>
+        <span>👤 Web Exclusiva Clientes</span>
+        <span>✂️ Web Exclusiva Peluqueros</span>
       </div>
     </div>
   </footer>
 
-  <!-- Scripts -->
-  <script src="js/notifications.js"></script>
-  <script src="js/turnero.js"></script>
-  <script src="js/app.js"></script>
+  <script src="js/auth-store.js"></script>
+  <script src="js/auth-page.js"></script>
 </body>
 </html>

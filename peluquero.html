@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Web de Peluqueros | Turnero & Historial de Turnos</title>
+  <meta name="description" content="Portal exclusivo para peluqueros. Visualizá el turnero con los clientes anotados y gestioná el historial cambiando el estado entre pendiente, atendido o no atendido.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23cda34f'><circle cx='6' cy='6' r='3'/><circle cx='6' cy='18' r='3'/><line x1='20' y1='4' x2='8.12' y2='15.88'/><line x1='14.47' y1='14.48' x2='20' y2='20'/><line x1='8.12' y1='8.12' x2='12' y2='12'/></svg>">
+</head>
+<body>
+
+  <!-- ==========================================================================
+       HEADER EXCLUSIVO WEB DE PELUQUEROS
+       ========================================================================== -->
+  <header class="main-header">
+    <div class="header-container">
+      <div class="brand-wrapper" id="brandLogo">
+        <div class="brand-icon-box">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>
+        </div>
+        <div class="brand-info">
+          <h1>Turnero Peluquería <span class="portal-role-badge barber">Web Peluqueros</span></h1>
+          <p id="headerBarberShopsSubtitle">Gestión de Clientes Anotados e Historial</p>
+        </div>
+      </div>
+
+      <!-- Navegación del Peluquero -->
+      <nav class="nav-tabs-bar" aria-label="Navegación de peluquero">
+        <button type="button" class="nav-tab-btn active" data-target-view="viewBarberTurnero" id="tabBarberTurnero">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <span>Turnero (Clientes Anotados)</span>
+        </button>
+        <button type="button" class="nav-tab-btn" data-target-view="viewBarberHistory" id="tabBarberHistory">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="10"/></svg>
+          <span>Historial de Turnos</span>
+          <span class="badge-count" id="historyPendingBadge" style="display:none;">0</span>
+        </button>
+      </nav>
+
+      <div class="header-actions">
+        <div class="user-session-chip barber">
+          <span class="user-chip-avatar">✂️</span>
+          <div class="user-chip-text">
+            <strong id="headerBarberName">Peluquero</strong>
+            <span id="headerBarberDni">DNI -</span>
+          </div>
+        </div>
+        <a href="index.html?logout=1" class="btn-nav-action" title="Cerrar sesión o cambiar de usuario">
+          Cerrar Sesión
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ========================================================================
+         VISTA 1: TURNERO DE PELUQUEROS (CALENDARIO + CLIENTES ANOTADOS POR HORA)
+         ======================================================================== -->
+    <section id="viewBarberTurnero" class="view-section active">
+
+      <!-- Ficha del Peluquero y Peluquerías donde trabaja -->
+      <div class="tools-strip-wrap">
+        <div class="client-preloaded-banner barber-banner">
+          <div class="preloaded-left">
+            <div class="preloaded-icon gold">✂️</div>
+            <div>
+              <h4 id="barberWelcomeTitle">Panel de Peluquero</h4>
+              <p>Seleccioná cualquier día y mes en el turnero para ver qué clientes están anotados en cada horario y gestionar su atención.</p>
+            </div>
+          </div>
+          <div class="preloaded-pills" id="barberShopsPills">
+            <!-- Peluquerías donde trabaja el peluquero -->
+          </div>
+        </div>
+      </div>
+
+      <div class="barber-turnero-layout">
+        <!-- Columna Izquierda: Calendario Mensual Interactivo -->
+        <div class="barber-calendar-sidebar">
+          <div class="step-card">
+            <div class="step-header" style="margin-bottom: 16px; padding-bottom: 12px;">
+              <div>
+                <h3 style="font-size: 1.1rem;">Calendario de Turnos</h3>
+                <p class="step-subtitle">Elegí el mes y día a consultar</p>
+              </div>
+            </div>
+
+            <div class="calendar-widget">
+              <div class="calendar-nav-bar">
+                <span class="cal-month-year" id="barberCalMonthYear">Octubre 2026</span>
+                <div class="calendar-controls">
+                  <button type="button" class="cal-nav-btn" id="btnBarberPrevMonth" title="Mes anterior">‹</button>
+                  <button type="button" class="cal-nav-btn" id="btnBarberNextMonth" title="Mes siguiente">›</button>
+                </div>
+              </div>
+
+              <div class="calendar-weekdays">
+                <span>Lu</span>
+                <span>Ma</span>
+                <span>Mi</span>
+                <span>Ju</span>
+                <span>Vi</span>
+                <span>Sá</span>
+                <span>Do</span>
+              </div>
+
+              <div class="calendar-grid-days" id="barberCalendarGridDays"></div>
+
+              <div class="calendar-legend">
+                <div class="legend-item"><span class="legend-dot selected"></span><span>Con clientes anotados</span></div>
+                <div class="legend-item"><span class="legend-dot avail"></span><span>Sin reservas aún</span></div>
+              </div>
+            </div>
+
+            <!-- Resumen rápido del día seleccionado -->
+            <div class="barber-day-summary-box" id="barberDayQuickStats"></div>
+          </div>
+        </div>
+
+        <!-- Columna Derecha: Grilla de Horarios del Día con los Clientes Anotados -->
+        <div class="barber-schedule-column">
+          <div class="turnero-main-board">
+            <div class="turnero-board-header">
+              <div>
+                <h3 id="barberSelectedDateHeading">Turnos del Día Seleccionado</h3>
+                <p style="font-size: 0.82rem; color: var(--text-muted); margin-top: 2px;">
+                  Detalle de horarios libres y clientes anotados (Nombre, DNI, Fecha de Nacimiento, Teléfono y Estado)
+                </p>
+              </div>
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <button type="button" class="btn-table-assign" onclick="document.getElementById('tabBarberHistory').click();">
+                  📋 Ver Historial Completo →
+                </button>
+              </div>
+            </div>
+
+            <div class="turnero-table-wrap">
+              <table class="turnero-table">
+                <thead>
+                  <tr>
+                    <th>Horario</th>
+                    <th>Disponibilidad / Estado</th>
+                    <th>Cliente Anotado</th>
+                    <th>Datos del Cliente (DNI / Nac. / Tel.)</th>
+                    <th>Peluquería & Nota</th>
+                    <th>Cambiar Estado del Turno</th>
+                  </tr>
+                </thead>
+                <tbody id="barberDayScheduleBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         VISTA 2: HISTORIAL DE TURNOS (SOLICITADOS, ATENDIDOS Y CAMBIO DE ESTADO)
+         ======================================================================== -->
+    <section id="viewBarberHistory" class="view-section">
+      <div class="dashboard-container">
+
+        <div class="turnero-top-bar">
+          <div class="turnero-title-area">
+            <h2>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="10"/></svg>
+              <span>Historial de Turnos Solicitados y Atendidos</span>
+            </h2>
+            <p>Visualizá todos los turnos solicitados y ya atendidos, y cambiá su estado entre <strong>Pendiente</strong>, <strong>Atendido</strong> o <strong>No atendido</strong>.</p>
+          </div>
+
+          <!-- Controles de Filtro del Historial -->
+          <div class="history-filters-bar">
+            <div class="filter-tabs-group" id="historyStatusFilterBtns">
+              <button type="button" class="filter-pill-btn active" data-status-filter="todos">Todos</button>
+              <button type="button" class="filter-pill-btn" data-status-filter="pendiente">⏳ Pendientes</button>
+              <button type="button" class="filter-pill-btn" data-status-filter="atendido">✓ Atendidos</button>
+              <button type="button" class="filter-pill-btn" data-status-filter="no-atendido">✕ No atendidos</button>
+            </div>
+
+            <div class="history-search-wrap">
+              <input type="text" id="historySearchInput" placeholder="Buscar cliente por nombre o DNI...">
+            </div>
+          </div>
+        </div>
+
+        <!-- KPIs del Historial -->
+        <div class="turnero-kpis-grid four-cols">
+          <div class="kpi-card">
+            <div class="kpi-icon-box gold">📋</div>
+            <div class="kpi-info-box">
+              <span class="kpi-label">Total Solicitados</span>
+              <span class="kpi-number" id="kpiHistoryTotal">0</span>
+              <span class="kpi-trend">Turnos registrados</span>
+            </div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-icon-box orange">⏳</div>
+            <div class="kpi-info-box">
+              <span class="kpi-label">Pendientes</span>
+              <span class="kpi-number" id="kpiHistoryPending">0</span>
+              <span class="kpi-trend" style="color: var(--warning);">Por atender</span>
+            </div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-icon-box green">✓</div>
+            <div class="kpi-info-box">
+              <span class="kpi-label">Ya Atendidos</span>
+              <span class="kpi-number" id="kpiHistoryAttended">0</span>
+              <span class="kpi-trend" style="color: var(--success);">Completados</span>
+            </div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-icon-box red">✕</div>
+            <div class="kpi-info-box">
+              <span class="kpi-label">No Atendidos</span>
+              <span class="kpi-number" id="kpiHistoryNotAttended">0</span>
+              <span class="kpi-trend" style="color: var(--danger);">Ausentes / No realizados</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tabla Completa del Historial de Turnos -->
+        <div class="turnero-main-board">
+          <div class="turnero-board-header">
+            <h3>Listado General de Turnos (Solicitados y Atendidos)</h3>
+            <div class="board-live-pulse">
+              <span>Hacé clic en Pendiente, Atendido o No atendido para actualizar el estado</span>
+            </div>
+          </div>
+
+          <div class="turnero-table-wrap">
+            <table class="turnero-table">
+              <thead>
+                <tr>
+                  <th>Fecha y Hora</th>
+                  <th>Cliente Anotado</th>
+                  <th>DNI & Fecha de Nac.</th>
+                  <th>Teléfono</th>
+                  <th>Peluquería & Detalle</th>
+                  <th>Estado Actual</th>
+                  <th>Cambiar Estado (Pendiente / Atendido / No atendido)</th>
+                </tr>
+              </thead>
+              <tbody id="barberHistoryTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <footer class="app-footer">
+    <div class="footer-inner">
+      <div class="footer-copy">
+        Turnero Peluquería • Web Exclusiva para Peluqueros
+      </div>
+      <div class="footer-specs">
+        <span>✂️ Gestión de Clientes Anotados</span>
+        <span>📋 Control de Estado: Pendiente • Atendido • No atendido</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/auth-store.js"></script>
+  <script src="js/notifications.js"></script>
+  <script src="js/peluquero.js"></script>
+</body>
+</html>

@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Web de Clientes | Turnero Peluquería</title>
+  <meta name="description" content="Portal exclusivo para clientes. Consultá días, meses y horarios disponibles u ocupados y solicitá tu turno con tus datos ya cargados.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23cda34f'><circle cx='6' cy='6' r='3'/><circle cx='6' cy='18' r='3'/><line x1='20' y1='4' x2='8.12' y2='15.88'/><line x1='14.47' y1='14.48' x2='20' y2='20'/><line x1='8.12' y1='8.12' x2='12' y2='12'/></svg>">
+</head>
+<body>
+
+  <!-- ==========================================================================
+       HEADER EXCLUSIVO WEB DE CLIENTES
+       ========================================================================== -->
+  <header class="main-header">
+    <div class="header-container">
+      <div class="brand-wrapper" id="brandLogo">
+        <div class="brand-icon-box">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>
+        </div>
+        <div class="brand-info">
+          <h1>Turnero Peluquería <span class="portal-role-badge client">Web Clientes</span></h1>
+          <p>Reserva de Turnos Online • Días, Meses y Horarios</p>
+        </div>
+      </div>
+
+      <nav class="nav-tabs-bar" aria-label="Navegación de cliente">
+        <button type="button" class="nav-tab-btn active" data-target-view="viewClientBooking" id="tabClientBooking">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <span>Solicitar Turno</span>
+        </button>
+        <button type="button" class="nav-tab-btn" data-target-view="viewClientMyTurns" id="tabClientMyTurns">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          <span>Mis Turnos Solicitados</span>
+          <span class="badge-count" id="myTurnsCountBadge" style="display:none;">0</span>
+        </button>
+      </nav>
+
+      <div class="header-actions">
+        <div class="user-session-chip">
+          <span class="user-chip-avatar">👤</span>
+          <div class="user-chip-text">
+            <strong id="headerClientName">Cliente</strong>
+            <span id="headerClientDni">DNI -</span>
+          </div>
+        </div>
+        <a href="index.html?logout=1" class="btn-nav-action" title="Cerrar sesión o cambiar de usuario">
+          Cerrar Sesión
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ========================================================================
+         SECCIÓN 1: SOLICITAR TURNO (CALENDARIO DÍAS/MESES/HORAS + DATOS PRECARGADOS)
+         ======================================================================== -->
+    <section id="viewClientBooking" class="view-section active">
+
+      <!-- Banner de Cliente con Datos Cargados -->
+      <div class="tools-strip-wrap">
+        <div class="client-preloaded-banner">
+          <div class="preloaded-left">
+            <div class="preloaded-icon">✓</div>
+            <div>
+              <h4>Tus datos de cliente ya están cargados en la web</h4>
+              <p>Al elegir día, mes y horario disponible, tu turno se registrará automáticamente con tu ficha personal.</p>
+            </div>
+          </div>
+          <div class="preloaded-pills" id="clientTopDataPills">
+            <!-- Rellenado dinámicamente con Nombre, DNI, Fecha de Nac. y Teléfono -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Flujo de Reserva -->
+      <div class="booking-flow-container">
+        <div class="booking-steps-column">
+
+          <!-- PASO 1: TURNERO (MESES, DÍAS Y HORARIOS DISPONIBLES / OCUPADOS) -->
+          <div class="step-card" id="stepCalendar">
+            <div class="step-header">
+              <div class="step-title-wrap">
+                <div class="step-number">1</div>
+                <div>
+                  <h3>Turnero: Días, Meses y Horas Disponibles y Ocupadas</h3>
+                  <p class="step-subtitle">Navegá por los meses, elegí un día disponible y seleccioná un horario libre</p>
+                </div>
+              </div>
+              <div class="tools-badges">
+                <span>🟢 Libre</span>
+                <span>🔴 Ocupado</span>
+              </div>
+            </div>
+
+            <div class="calendar-time-layout">
+              <!-- Calendario Mensual Interactivo -->
+              <div class="calendar-widget">
+                <div class="calendar-nav-bar">
+                  <span class="cal-month-year" id="calendarMonthYear">Octubre 2026</span>
+                  <div class="calendar-controls">
+                    <button type="button" class="cal-nav-btn" id="btnPrevMonth" title="Mes anterior">‹</button>
+                    <button type="button" class="cal-nav-btn" id="btnNextMonth" title="Mes siguiente">›</button>
+                  </div>
+                </div>
+
+                <div class="calendar-weekdays">
+                  <span>Lu</span>
+                  <span>Ma</span>
+                  <span>Mi</span>
+                  <span>Ju</span>
+                  <span>Vi</span>
+                  <span>Sá</span>
+                  <span>Do</span>
+                </div>
+
+                <div class="calendar-grid-days" id="calendarGridDays"></div>
+
+                <div class="calendar-legend">
+                  <div class="legend-item"><span class="legend-dot avail"></span><span>Con horarios libres</span></div>
+                  <div class="legend-item"><span class="legend-dot busy"></span><span>Completo / Cerrado</span></div>
+                  <div class="legend-item"><span class="legend-dot selected"></span><span>Día seleccionado</span></div>
+                </div>
+              </div>
+
+              <!-- Panel de Horarios Disponibles y Ocupados -->
+              <div class="time-slots-panel">
+                <div class="slots-header-info">
+                  <div class="selected-date-preview">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    <h4 id="selectedDatePreviewText">Fecha seleccionada</h4>
+                  </div>
+                  <span class="slot-availability-count" id="slotAvailCounter">Turnos libres</span>
+                </div>
+
+                <div class="slots-group-container" id="slotsGroupContainer"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PASO 2: DATOS PRECARGADOS DEL CLIENTE + PELUQUERÍA -->
+          <div class="step-card" id="stepClientData">
+            <div class="step-header">
+              <div class="step-title-wrap">
+                <div class="step-number">2</div>
+                <div>
+                  <h3>Tus Datos Cargados para el Turno</h3>
+                  <p class="step-subtitle">Tus datos de registro ya están listos. Solo elegí la peluquería o agregá una aclaración si querés.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="client-form-grid">
+              <div class="form-group">
+                <label for="clientName">Nombre y Apellido (Cargado)</label>
+                <div class="form-input-wrap readonly-wrap">
+                  <input type="text" id="clientName" readonly>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="clientDni">DNI (Cargado)</label>
+                <div class="form-input-wrap readonly-wrap">
+                  <input type="text" id="clientDni" readonly>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="clientBirthDate">Fecha de Nacimiento (Cargada)</label>
+                <div class="form-input-wrap readonly-wrap">
+                  <input type="date" id="clientBirthDate" readonly>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="clientPhone">Número de Teléfono (Cargado)</label>
+                <div class="form-input-wrap readonly-wrap">
+                  <input type="tel" id="clientPhone" readonly>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="clientBarbershop">Peluquería <span class="required">*</span></label>
+                <div class="form-input-wrap">
+                  <select id="clientBarbershop" class="auth-select"></select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="clientNotes">Servicio / Aclaración (Opcional)</label>
+                <div class="form-input-wrap">
+                  <input type="text" id="clientNotes" placeholder="Ej: Corte clásico, degradé, perfilado de barba...">
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Resumen Lateral del Turno -->
+        <aside class="booking-summary-sidebar">
+          <div class="summary-card">
+            <h3 class="summary-title">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              <span>Resumen de tu Turno</span>
+            </h3>
+
+            <div class="summary-rows">
+              <div class="summary-row">
+                <span class="summary-label">Cliente:</span>
+                <span class="summary-value" id="summaryClientName">-</span>
+              </div>
+              <div class="summary-row">
+                <span class="summary-label">DNI:</span>
+                <span class="summary-value" id="summaryClientDni">-</span>
+              </div>
+              <div class="summary-row">
+                <span class="summary-label">Teléfono:</span>
+                <span class="summary-value" id="summaryClientPhone">-</span>
+              </div>
+              <div class="summary-row">
+                <span class="summary-label">Peluquería:</span>
+                <span class="summary-value" id="summaryBarbershop">-</span>
+              </div>
+              <div class="summary-row">
+                <span class="summary-label">Fecha:</span>
+                <span class="summary-value" id="summaryDate">-</span>
+              </div>
+              <div class="summary-row">
+                <span class="summary-label">Horario:</span>
+                <span class="summary-value highlight" id="summaryTime">Seleccionar horario</span>
+              </div>
+            </div>
+
+            <button type="button" class="btn-confirm-booking" id="btnConfirmBooking" disabled>
+              <span>Solicitar Turno Ahora</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+
+            <div class="booking-guarantee-note">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              <span>Tu turno se registrará con estado <strong>Pendiente</strong> y aparecerá al instante en el turnero de los peluqueros.</span>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         SECCIÓN 2: MIS TURNOS SOLICITADOS
+         ======================================================================== -->
+    <section id="viewClientMyTurns" class="view-section">
+      <div class="dashboard-container">
+        <div class="turnero-top-bar">
+          <div class="turnero-title-area">
+            <h2>Mis Turnos Solicitados</h2>
+            <p>Seguimiento de tus reservas y su estado actual (Pendiente, Atendido o No atendido)</p>
+          </div>
+          <button type="button" class="btn-manual-turn" onclick="document.getElementById('tabClientBooking').click();">
+            <span>➕ Pedir Nuevo Turno</span>
+          </button>
+        </div>
+
+        <div class="turnero-main-board">
+          <div class="turnero-table-wrap">
+            <table class="turnero-table">
+              <thead>
+                <tr>
+                  <th>Fecha</th>
+                  <th>Horario</th>
+                  <th>Peluquería</th>
+                  <th>Detalle / Aclaración</th>
+                  <th>Estado del Turno</th>
+                </tr>
+              </thead>
+              <tbody id="clientMyTurnsTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==========================================================================
+       MODAL: TURNO SOLICITADO CON ÉXITO
+       ========================================================================== -->
+  <div class="modal-backdrop" id="bookingSuccessModal">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3>¡Turno Solicitado con Éxito!</h3>
+        <button type="button" class="btn-close-modal" id="btnCloseSuccessModal">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="booking-success-box">
+          <div class="success-check-badge">✓</div>
+          <h2>¡Reserva Confirmada!</h2>
+          <p>Tu turno fue agendado con tus datos de cliente precargados.</p>
+
+          <div class="ticket-pass-card">
+            <div class="ticket-row">
+              <span>Cliente:</span>
+              <span id="ticketClient">-</span>
+            </div>
+            <div class="ticket-row">
+              <span>DNI:</span>
+              <span id="ticketDni">-</span>
+            </div>
+            <div class="ticket-row">
+              <span>Teléfono:</span>
+              <span id="ticketPhone">-</span>
+            </div>
+            <div class="ticket-row">
+              <span>Peluquería:</span>
+              <span id="ticketShop">-</span>
+            </div>
+            <div class="ticket-row">
+              <span>Fecha y Hora:</span>
+              <span id="ticketDateTime" style="color: var(--primary);">-</span>
+            </div>
+            <div class="ticket-row">
+              <span>Estado inicial:</span>
+              <span style="color: var(--warning);">⏳ Pendiente</span>
+            </div>
+          </div>
+
+          <div class="ticket-actions-row">
+            <button type="button" class="btn-ticket-action primary" id="btnGoToMyTurns">
+              <span>📋 Ver Mis Turnos Solicitados</span>
+            </button>
+            <button type="button" class="btn-ticket-action" id="btnStayInCalendar">
+              <span>Seguir en el Calendario</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <footer class="app-footer">
+    <div class="footer-inner">
+      <div class="footer-copy">
+        Turnero Peluquería • Web Exclusiva para Clientes
+      </div>
+      <div class="footer-specs">
+        <span>👤 Tus datos personales están protegidos y cargados en sesión</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/auth-store.js"></script>
+  <script src="js/notifications.js"></script>
+  <script src="js/cliente.js"></script>
+</body>
+</html>
