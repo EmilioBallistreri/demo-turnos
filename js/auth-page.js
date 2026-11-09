@@ -4,7 +4,6 @@
 
 class AuthPageController {
   constructor() {
-    this.barbershopsList = [];
     this.init();
   }
 
@@ -17,7 +16,6 @@ class AuthPageController {
 
     this.checkActiveSessionBanner();
     this.setupModeCardsAndModal();
-    this.setupBarbershopsTags();
     this.setupForms();
     this.renderQuickAccounts();
   }
@@ -109,57 +107,16 @@ class AuthPageController {
     });
   }
 
-  setupBarbershopsTags() {
-    const input = document.getElementById('barShopsInput');
-    const btnAdd = document.getElementById('btnAddBarbershop');
-    if (!input || !btnAdd) return;
-
-    const addFromInput = () => {
-      const raw = input.value.trim();
-      if (!raw) return;
-      raw.split(',').forEach(part => {
-        const clean = part.trim();
-        if (clean && !this.barbershopsList.includes(clean)) {
-          this.barbershopsList.push(clean);
-        }
-      });
-      input.value = '';
-      this.renderBarbershopTags();
-    };
-
-    btnAdd.addEventListener('click', addFromInput);
-
-    input.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        addFromInput();
-      }
-    });
+  showFormError(elId, message) {
+    const box = document.getElementById(elId);
+    if (!box) return;
+    box.style.display = 'block';
+    box.textContent = message;
   }
 
-  renderBarbershopTags() {
-    const container = document.getElementById('barShopsTags');
-    if (!container) return;
-
-    if (this.barbershopsList.length === 0) {
-      container.innerHTML = '';
-      return;
-    }
-
-    container.innerHTML = this.barbershopsList.map((shop, idx) => `
-      <span class="shop-tag-chip">
-        <span>💈 ${shop}</span>
-        <button type="button" class="shop-tag-remove" data-index="${idx}" title="Quitar">✕</button>
-      </span>
-    `).join('');
-
-    container.querySelectorAll('.shop-tag-remove').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const idx = Number(btn.getAttribute('data-index'));
-        this.barbershopsList.splice(idx, 1);
-        this.renderBarbershopTags();
-      });
-    });
+  hideFormError(elId) {
+    const box = document.getElementById(elId);
+    if (box) box.style.display = 'none';
   }
 
   setupForms() {
@@ -168,15 +125,12 @@ class AuthPageController {
     if (formCli) {
       formCli.addEventListener('submit', (e) => {
         e.preventDefault();
+        this.hideFormError('cliErrorMsg');
+
         const fullName = document.getElementById('cliFullName').value.trim();
         const birthDate = document.getElementById('cliBirthDate').value;
         const dni = document.getElementById('cliDni').value.trim();
         const phone = document.getElementById('cliPhone').value.trim();
-
-        if (!fullName || !birthDate || !dni || !phone) {
-          alert('Por favor completá todos tus datos (Nombre y Apellido, Fecha de nacimiento, DNI y Teléfono).');
-          return;
-        }
 
         try {
           window.turneroStore.registerUser({
@@ -188,7 +142,7 @@ class AuthPageController {
           });
           window.location.href = 'cliente.html';
         } catch (err) {
-          alert(err.message);
+          this.showFormError('cliErrorMsg', err.message);
         }
       });
     }
@@ -198,31 +152,12 @@ class AuthPageController {
     if (formBar) {
       formBar.addEventListener('submit', (e) => {
         e.preventDefault();
+        this.hideFormError('barErrorMsg');
+
         const fullName = document.getElementById('barFullName').value.trim();
         const birthDate = document.getElementById('barBirthDate').value;
         const dni = document.getElementById('barDni').value.trim();
         const phone = document.getElementById('barPhone').value.trim();
-        const shopsInputVal = document.getElementById('barShopsInput').value.trim();
-
-        if (shopsInputVal) {
-          shopsInputVal.split(',').forEach(s => {
-            const clean = s.trim();
-            if (clean && !this.barbershopsList.includes(clean)) {
-              this.barbershopsList.push(clean);
-            }
-          });
-        }
-
-        if (!fullName || !birthDate || !dni || !phone) {
-          alert('Por favor completá todos tus datos personales.');
-          return;
-        }
-
-        if (this.barbershopsList.length === 0) {
-          alert('Por favor ingresá el nombre de la peluquería o peluquerías en las que trabajás.');
-          document.getElementById('barShopsInput')?.focus();
-          return;
-        }
 
         try {
           window.turneroStore.registerUser({
@@ -230,12 +165,11 @@ class AuthPageController {
             fullName,
             birthDate,
             dni,
-            phone,
-            barbershops: [...this.barbershopsList]
+            phone
           });
           window.location.href = 'peluquero.html';
         } catch (err) {
-          alert(err.message);
+          this.showFormError('barErrorMsg', err.message);
         }
       });
     }
@@ -245,16 +179,17 @@ class AuthPageController {
     if (formLogin) {
       formLogin.addEventListener('submit', (e) => {
         e.preventDefault();
+        this.hideFormError('loginErrorMsg');
+
         const dni = document.getElementById('loginDni').value.trim();
         const role = document.getElementById('loginRole').value || null;
-        const errBox = document.getElementById('loginErrorMsg');
 
         const user = window.turneroStore.loginByDni(dni, role);
         if (!user) {
-          if (errBox) {
-            errBox.style.display = 'block';
-            errBox.textContent = 'No se encontró ningún usuario registrado con ese DNI. Podés registrarte como Cliente o como Peluquero.';
-          }
+          this.showFormError(
+            'loginErrorMsg',
+            'No se encontró ningún usuario registrado con ese DNI. Podés registrarte como Cliente o como Peluquero.'
+          );
           return;
         }
 
@@ -271,15 +206,12 @@ class AuthPageController {
     container.innerHTML = users.map(u => {
       const isBarber = u.role === 'peluquero';
       const badge = isBarber ? '✂️ Peluquero' : '👤 Cliente';
-      const shopsInfo = isBarber && u.barbershops?.length
-        ? ` • ${u.barbershops.join(', ')}`
-        : '';
 
       return `
         <button type="button" class="quick-account-btn" data-dni="${u.dni}" data-role="${u.role}">
           <span class="qa-role">${badge}</span>
           <span class="qa-name">${u.fullName}</span>
-          <span class="qa-meta">DNI: ${u.dni}${shopsInfo}</span>
+          <span class="qa-meta">DNI: ${u.dni}</span>
         </button>
       `;
     }).join('');

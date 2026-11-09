@@ -58,26 +58,20 @@ class BarberPortalController {
 
   renderBarberHeaderInfo() {
     const u = this.currentUser;
-    const shops = Array.isArray(u.barbershops) && u.barbershops.length > 0
-      ? u.barbershops
-      : ['Peluquería Central'];
 
     const nameEl = document.getElementById('headerBarberName');
     const dniEl = document.getElementById('headerBarberDni');
-    const subEl = document.getElementById('headerBarberShopsSubtitle');
     const welcomeEl = document.getElementById('barberWelcomeTitle');
     const pillsEl = document.getElementById('barberShopsPills');
 
     if (nameEl) nameEl.textContent = u.fullName;
     if (dniEl) dniEl.textContent = `DNI ${u.dni}`;
-    if (subEl) subEl.textContent = `Peluquerías: ${shops.join(' • ')}`;
     if (welcomeEl) welcomeEl.textContent = `Peluquero: ${u.fullName}`;
 
     if (pillsEl) {
-      const shopBadges = shops.map(s => `<span class="data-pill gold">💈 <strong>${s}</strong></span>`).join('');
       pillsEl.innerHTML = `
-        ${shopBadges}
         <span class="data-pill">🪪 DNI: <strong>${u.dni}</strong></span>
+        <span class="data-pill">🎂 Nac.: <strong>${window.turneroStore.formatDateDisplay(u.birthDate)}</strong></span>
         <span class="data-pill">📞 Tel.: <strong>${u.phone}</strong></span>
       `;
     }
@@ -286,7 +280,7 @@ class BarberPortalController {
             <td>
               <div class="client-cell-info">
                 <span class="client-name-txt">👤 ${turn.clientName}</span>
-                <span class="client-phone-txt" style="color: var(--primary);">Anótado en este turno</span>
+                <span class="client-phone-txt" style="color: var(--primary);">Anotado en este turno</span>
               </div>
             </td>
             <td>
@@ -294,12 +288,6 @@ class BarberPortalController {
                 <span><strong>DNI:</strong> ${turn.clientDni || '-'}</span>
                 <span><strong>Nac.:</strong> ${window.turneroStore.formatDateDisplay(turn.clientBirthDate)}</span>
                 <span><strong>Tel.:</strong> ${turn.clientPhone}</span>
-              </div>
-            </td>
-            <td>
-              <div class="client-meta-stack">
-                <span><strong>💈 ${turn.barbershop || 'Peluquería Central'}</strong></span>
-                <span style="color: var(--text-muted);">${turn.notes || 'Corte de pelo'}</span>
               </div>
             </td>
             <td>
@@ -318,7 +306,7 @@ class BarberPortalController {
             <td>
               <span class="slot-state-pill disponible">Horario Libre</span>
             </td>
-            <td colspan="4">
+            <td colspan="3">
               <span style="color: var(--text-faint); font-style: italic; font-size: 0.84rem;">
                 Sin cliente anotado en este horario
               </span>
@@ -385,7 +373,7 @@ class BarberPortalController {
         return false;
       }
       if (this.historySearchQuery) {
-        const haystack = `${turn.clientName} ${turn.clientDni} ${turn.clientPhone} ${turn.barbershop}`.toLowerCase();
+        const haystack = `${turn.clientName} ${turn.clientDni} ${turn.clientPhone}`.toLowerCase();
         if (!haystack.includes(this.historySearchQuery)) return false;
       }
       return true;
@@ -397,7 +385,7 @@ class BarberPortalController {
     if (filtered.length === 0) {
       tbody.innerHTML = `
         <tr>
-          <td colspan="7" style="text-align:center; padding: 36px; color: var(--text-muted);">
+          <td colspan="6" style="text-align:center; padding: 36px; color: var(--text-muted);">
             No se encontraron turnos para el filtro seleccionado.
           </td>
         </tr>
@@ -426,12 +414,6 @@ class BarberPortalController {
         </td>
         <td>
           <span style="font-size: 0.85rem;">📞 ${turn.clientPhone}</span>
-        </td>
-        <td>
-          <div class="client-meta-stack">
-            <span><strong>💈 ${turn.barbershop || 'Peluquería Central'}</strong></span>
-            <span style="color: var(--text-muted);">${turn.notes || 'Corte de pelo'}</span>
-          </div>
         </td>
         <td>
           ${this.getStatusPillHtml(turn.status)}
@@ -471,4 +453,3 @@ class BarberPortalController {
 document.addEventListener('DOMContentLoaded', () => {
   window.barberPortal = new BarberPortalController();
 });
-

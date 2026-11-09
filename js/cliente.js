@@ -220,16 +220,25 @@ class ClientPortalController {
 
       slots.forEach(time => {
         const isOccupied = window.turneroStore.isSlotOccupied(this.selectedDateStr, time);
-        const isSelected = this.selectedTimeSlot === time;
+        const isPastSlot = window.turneroStore.isSlotInPast(this.selectedDateStr, time);
+        const isDisabled = isOccupied || isPastSlot;
+        const isSelected = this.selectedTimeSlot === time && !isDisabled;
 
         let btnClass = 'time-slot-btn';
-        if (isOccupied) btnClass += ' occupied';
+        if (isDisabled) btnClass += ' occupied';
         if (isSelected) btnClass += ' selected';
 
+        let statusText = '🟢 Disponible';
+        if (isOccupied) {
+          statusText = '🔴 Ocupado';
+        } else if (isPastSlot) {
+          statusText = '⏱️ Pasado';
+        }
+
         groupHtml += `
-          <button type="button" class="${btnClass}" data-time="${time}" ${isOccupied ? 'disabled' : ''}>
+          <button type="button" class="${btnClass}" data-time="${time}" ${isDisabled ? 'disabled' : ''}>
             <span>${time} hs</span>
-            <span class="slot-status-label">${isOccupied ? '🔴 Ocupado' : '🟢 Disponible'}</span>
+            <span class="slot-status-label">${statusText}</span>
           </button>
         `;
       });
@@ -239,15 +248,16 @@ class ClientPortalController {
     };
 
     let totalAvail = 0;
+    let totalOccupied = 0;
     window.ALL_TIME_SLOTS.forEach(t => {
-      if (!window.turneroStore.isSlotOccupied(this.selectedDateStr, t)) {
-        totalAvail++;
-      }
+      const occ = window.turneroStore.isSlotOccupied(this.selectedDateStr, t);
+      const past = window.turneroStore.isSlotInPast(this.selectedDateStr, t);
+      if (occ) totalOccupied++;
+      if (!occ && !past) totalAvail++;
     });
 
     if (availCounter) {
-      const occupiedCount = window.ALL_TIME_SLOTS.length - totalAvail;
-      availCounter.textContent = `${totalAvail} libres • ${occupiedCount} ocupados`;
+      availCounter.textContent = `${totalAvail} libres • ${totalOccupied} ocupados`;
     }
 
     slotsGroup.innerHTML = `
@@ -305,7 +315,6 @@ class ClientPortalController {
     if (btnConfirm) {
       btnConfirm.addEventListener('click', () => {
         if (!this.selectedTimeSlot) {
-          alert('Por favor seleccioná un horario disponible en el calendario.');
           return;
         }
 
@@ -343,7 +352,11 @@ class ClientPortalController {
           this.updateSummarySidebar();
           this.renderMyTurns();
         } catch (err) {
-          alert(err.message);
+          if (window.barberNotificationEngine) {
+            window.barberNotificationEngine.showToast('Horario no disponible', err.message, '⚠️', 'warning');
+          } else {
+            alert(err.message);
+          }
         }
       });
     }
@@ -362,6 +375,22 @@ class ClientPortalController {
         document.getElementById('tabClientMyTurns')?.click();
       });
     }
+  }
+
+  cancelMyTurn(turnId) {
+    window.turneroStore.deleteAppointment(turnId);
+    if (window.barberNotificationEngine) {
+      window.barberNotificationEngine.showToast(
+        'Turno Cancelado',
+        'Tu turno fue cancelado y el horario quedó liberado.',
+        '🗑️',
+        'info'
+      );
+    }
+    this.renderCalendar();
+    this.renderTimeSlots();
+    this.updateSummarySidebar();
+    this.renderMyTurns();
   }
 
   renderMyTurns() {
@@ -386,7 +415,7 @@ class ClientPortalController {
     if (myTurns.length === 0) {
       tbody.innerHTML = `
         <tr>
-          <td colspan="3" style="text-align:center; padding: 36px; color: var(--text-muted);">
+          <td colspan="4" style="text-align:center; padding: 36px; color: var(--text-muted);">
             Todavía no solicitaste ningún turno. Podés elegir día y horario desde la pestaña <strong>Solicitar Turno</strong>.
           </td>
         </tr>
@@ -405,6 +434,13 @@ class ClientPortalController {
         <td><strong>${window.turneroStore.formatDateDisplay(turn.date)}</strong></td>
         <td><span class="time-cell-badge">${turn.time} hs</span></td>
         <td>${statusBadgeMap[turn.status] || statusBadgeMap['pendiente']}</td>
+        <td>
+          ${turn.status === 'pendiente' ? `
+            <button type="button" class="btn-cancel-client-turn" onclick="window.clientPortal.cancelMyTurn('${turn.id}')">
+              ✕ Cancelar Turno
+            </button>
+          ` : `<span style="color: var(--text-faint); font-size: 0.8rem;">Cerrado</span>`}
+        </td>
       </tr>
     `).join('');
   }

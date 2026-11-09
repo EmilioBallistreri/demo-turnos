@@ -42,7 +42,7 @@
         <span class="hero-badge">✦ Acceso a la Aplicación Web</span>
         <h2 class="auth-main-title">Bienvenido al Turnero de Peluquería</h2>
         <p class="auth-main-subtitle">
-          Seleccioná una opción para abrir la ventana de registro o iniciar sesión con tu DNI.
+          Seleccioná una opción para abrir la ventana emergente de registro o iniciar sesión con tu DNI.
           Cada perfil accede a una web exclusiva según su rol.
         </p>
       </div>
@@ -71,7 +71,7 @@
           <div class="role-card-icon">✂️</div>
           <h3>Registrarme como Peluquero</h3>
           <p>
-            Registrate con tus datos personales y el nombre de la peluquería o peluquerías donde trabajás para gestionar tus turnos.
+            Registrate con tus datos personales para ingresar al panel del peluquero, ver los clientes anotados y gestionar el historial.
           </p>
           <ul class="role-card-features">
             <li>✓ Acceso a la Web exclusiva de Peluqueros</li>
@@ -153,6 +153,8 @@
             </div>
           </div>
 
+          <div id="cliErrorMsg" class="auth-error-box" style="display: none;"></div>
+
           <div class="auth-form-footer">
             <div class="auth-info-note">
               <span>🔒 Al registrarte ingresarás directamente a la <strong>Web de Clientes</strong> con tus datos cargados.</span>
@@ -170,7 +172,7 @@
             <div class="auth-form-icon gold">✂️</div>
             <div>
               <h3>Registro de Peluquero</h3>
-              <p>Completá tus datos personales y el nombre de la peluquería o peluquerías donde trabajás.</p>
+              <p>Completá tus datos personales para acceder a la gestión de turnos e historial.</p>
             </div>
           </div>
 
@@ -202,19 +204,9 @@
                 <input type="tel" id="barPhone" placeholder="Ej: +54 9 11 6789-4321" required>
               </div>
             </div>
-
-            <div class="form-group full-width">
-              <label for="barShopsInput">Nombre de la Peluquería o Peluquerías en las que trabaja <span class="required">*</span></label>
-              <div class="shops-input-row">
-                <div class="form-input-wrap" style="flex: 1;">
-                  <input type="text" id="barShopsInput" placeholder="Ej: Peluquería Central, Barbería Norte (separá con coma o tocá '+ Agregar')">
-                </div>
-                <button type="button" class="btn-add-shop" id="btnAddBarbershop">➕ Agregar Peluquería</button>
-              </div>
-              <span class="form-input-hint">Podés cargar una o varias peluquerías donde atendés.</span>
-              <div class="shops-tags-list" id="barShopsTags"></div>
-            </div>
           </div>
+
+          <div id="barErrorMsg" class="auth-error-box" style="display: none;"></div>
 
           <div class="auth-form-footer">
             <div class="auth-info-note">

@@ -64,7 +64,6 @@ class TurneroStore {
           birthDate: '1990-11-22',
           dni: '35112890',
           phone: '+54 9 11 6789-4321',
-          barbershops: ['Peluquería Central', 'Barbería Palermo Studio'],
           createdAt: new Date().toISOString()
         }
       ];
@@ -87,8 +86,6 @@ class TurneroStore {
           clientBirthDate: '1992-03-10',
           clientDni: '36789012',
           clientPhone: '+54 9 11 5541-8890',
-          barbershop: 'Peluquería Central',
-          notes: 'Corte clásico con tijera',
           status: 'atendido',
           createdAt: new Date(Date.now() - 86400000).toISOString()
         },
@@ -101,8 +98,6 @@ class TurneroStore {
           clientBirthDate: '1998-08-25',
           clientDni: '41234567',
           clientPhone: '+54 9 11 3214-9988',
-          barbershop: 'Barbería Palermo Studio',
-          notes: 'Degradé alto + perfilado de barba',
           status: 'no-atendido',
           createdAt: new Date(Date.now() - 82000000).toISOString()
         },
@@ -115,8 +110,6 @@ class TurneroStore {
           clientBirthDate: '1989-01-19',
           clientDni: '34567891',
           clientPhone: '+54 9 11 6723-4112',
-          barbershop: 'Peluquería Central',
-          notes: 'Corte bajo y prolijo',
           status: 'atendido',
           createdAt: new Date(Date.now() - 18000000).toISOString()
         },
@@ -129,22 +122,18 @@ class TurneroStore {
           clientBirthDate: '1995-07-03',
           clientDni: '38901234',
           clientPhone: '+54 9 11 9832-1100',
-          barbershop: 'Peluquería Central',
-          notes: 'Fade medio + barba',
           status: 'pendiente',
           createdAt: new Date(Date.now() - 7200000).toISOString()
         },
         {
           id: 'trn_1005',
           date: today,
-          time: '16:15',
+          time: '18:30',
           clientId: 'usr_cli_1',
           clientName: 'Martín Pérez',
           clientBirthDate: '1996-05-14',
           clientDni: '39456123',
           clientPhone: '+54 9 11 4589-2311',
-          barbershop: 'Peluquería Central',
-          notes: 'Corte clásico y rebaje de barba',
           status: 'pendiente',
           createdAt: new Date(Date.now() - 3600000).toISOString()
         },
@@ -157,14 +146,47 @@ class TurneroStore {
           clientBirthDate: '2000-12-05',
           clientDni: '42876543',
           clientPhone: '+54 9 11 2289-7654',
-          barbershop: 'Barbería Palermo Studio',
-          notes: 'Corte texturizado',
           status: 'pendiente',
           createdAt: new Date().toISOString()
         }
       ];
       localStorage.setItem(STORAGE_KEYS.APPOINTMENTS, JSON.stringify(seedAppointments));
     }
+  }
+
+  /* ==================== VALIDACIONES ==================== */
+
+  validateUserFields({ fullName, birthDate, dni, phone }) {
+    const cleanName = String(fullName || '').trim();
+    if (cleanName.length < 3) {
+      throw new Error('Por favor ingresá un Nombre y Apellido válido (mínimo 3 caracteres).');
+    }
+
+    const cleanDni = String(dni || '').replace(/\D/g, '');
+    if (cleanDni.length < 7 || cleanDni.length > 9) {
+      throw new Error('Por favor ingresá un DNI válido (entre 7 y 9 números, sin puntos).');
+    }
+
+    if (!birthDate) {
+      throw new Error('Por favor seleccioná tu fecha de nacimiento.');
+    }
+    const birthObj = new Date(birthDate + 'T00:00:00');
+    const today = new Date();
+    if (isNaN(birthObj.getTime()) || birthObj >= today || birthObj.getFullYear() < 1920) {
+      throw new Error('Por favor ingresá una fecha de nacimiento válida.');
+    }
+
+    const cleanPhoneDigits = String(phone || '').replace(/\D/g, '');
+    if (cleanPhoneDigits.length < 8) {
+      throw new Error('Por favor ingresá un número de teléfono válido (al menos 8 dígitos).');
+    }
+
+    return {
+      cleanName,
+      cleanDni,
+      birthDate,
+      cleanPhone: String(phone).trim()
+    };
   }
 
   /* ==================== USUARIOS Y SESIÓN ==================== */
@@ -203,12 +225,8 @@ class TurneroStore {
   }
 
   registerUser(userData) {
+    const { cleanName, cleanDni, birthDate, cleanPhone } = this.validateUserFields(userData);
     const users = this.getUsers();
-    const cleanDni = String(userData.dni || '').replace(/\D/g, '');
-
-    if (!cleanDni) {
-      throw new Error('El DNI ingresado no es válido.');
-    }
 
     const existingIndex = users.findIndex(
       u => String(u.dni).replace(/\D/g, '') === cleanDni && u.role === userData.role
@@ -217,11 +235,10 @@ class TurneroStore {
     const newUser = {
       id: existingIndex >= 0 ? users[existingIndex].id : `usr_${userData.role.slice(0, 3)}_${Date.now()}`,
       role: userData.role, // 'cliente' | 'peluquero'
-      fullName: userData.fullName.trim(),
-      birthDate: userData.birthDate,
+      fullName: cleanName,
+      birthDate,
       dni: cleanDni,
-      phone: userData.phone.trim(),
-      barbershops: userData.role === 'peluquero' ? userData.barbershops : undefined,
+      phone: cleanPhone,
       createdAt: new Date().toISOString()
     };
 
@@ -238,8 +255,9 @@ class TurneroStore {
 
   loginByDni(dni, role = null) {
     const cleanDni = String(dni || '').replace(/\D/g, '');
-    const users = this.getUsers();
+    if (!cleanDni) return null;
 
+    const users = this.getUsers();
     const user = users.find(u => {
       const matchDni = String(u.dni).replace(/\D/g, '') === cleanDni;
       return role ? (matchDni && u.role === role) : matchDni;
@@ -251,19 +269,6 @@ class TurneroStore {
 
     this.setCurrentUser(user);
     return user;
-  }
-
-  getAvailableBarbershops() {
-    const users = this.getUsers();
-    const shops = new Set(['Peluquería Central', 'Barbería Palermo Studio']);
-    users.forEach(u => {
-      if (u.role === 'peluquero' && Array.isArray(u.barbershops)) {
-        u.barbershops.forEach(s => {
-          if (s && s.trim()) shops.add(s.trim());
-        });
-      }
-    });
-    return Array.from(shops);
   }
 
   /* ==================== TURNOS ==================== */
@@ -288,13 +293,29 @@ class TurneroStore {
     return this.getAppointments().some(a => a.date === dateStr && a.time === timeStr);
   }
 
+  isSlotInPast(dateStr, timeStr) {
+    const todayStr = this.getTodayIso();
+    if (dateStr < todayStr) return true;
+    if (dateStr > todayStr) return false;
+
+    const [h, m] = timeStr.split(':').map(Number);
+    const now = new Date();
+    const slotMinutes = h * 60 + m;
+    const nowMinutes = now.getHours() * 60 + now.getMinutes();
+    return slotMinutes <= nowMinutes;
+  }
+
   getAppointmentAtSlot(dateStr, timeStr) {
     return this.getAppointments().find(a => a.date === dateStr && a.time === timeStr) || null;
   }
 
   createAppointment(data) {
+    if (this.isSlotInPast(data.date, data.time)) {
+      throw new Error(`El horario de las ${data.time} hs ya pasó. Por favor elegí un horario posterior.`);
+    }
+
     if (this.isSlotOccupied(data.date, data.time)) {
-      throw new Error(`El horario de las ${data.time} hs en la fecha ${data.date} ya se encuentra ocupado.`);
+      throw new Error(`El horario de las ${data.time} hs en la fecha ${this.formatDateDisplay(data.date)} ya se encuentra ocupado.`);
     }
 
     const appointments = this.getAppointments();
@@ -307,8 +328,6 @@ class TurneroStore {
       clientBirthDate: data.clientBirthDate || '',
       clientDni: String(data.clientDni || '').trim(),
       clientPhone: data.clientPhone.trim(),
-      barbershop: data.barbershop || 'Peluquería Central',
-      notes: (data.notes || '').trim(),
       status: 'pendiente', // 'pendiente' | 'atendido' | 'no-atendido'
       createdAt: new Date().toISOString()
     };
@@ -350,4 +369,3 @@ class TurneroStore {
 window.turneroStore = new TurneroStore();
 window.TIME_SLOTS = TIME_SLOTS;
 window.ALL_TIME_SLOTS = ALL_TIME_SLOTS;
-
